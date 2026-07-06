@@ -61,3 +61,5 @@ run-all-scenarios:
 	python -m seo_incident_copilot.main --scenario action_mismatch --dry-run-slack
 	python -m seo_incident_copilot.main --scenario invalid_schema_output --dry-run-slack
 	python -m seo_incident_copilot.main --scenario overconfident_weak_evidence --dry-run-slack
+live-api-smoke:
+	python scripts/live_api_smoke.py

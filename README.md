@@ -101,7 +101,7 @@ This command runs the full reviewer experience:
 Expected quality result:
 
 ```text
-37 passed
+42 passed
 All checks passed!
 Reviewer demo completed successfully.
 ```
@@ -459,7 +459,7 @@ python -m ruff check .
 Expected result:
 
 ```text
-37 passed
+42 passed
 All checks passed!
 ```
 
@@ -729,3 +729,85 @@ python -m pytest
 All client names, URLs, ranking snapshots, SERP examples, GSC trends, audit findings, model outputs, and revenue-risk estimates in this repository are synthetic.
 
 They are designed to look realistic enough to test the workflow without exposing real client data.
+## Replacing fixtures with live model APIs
+
+The current case-study implementation uses prompt files and curated JSON fixtures instead of live LLM calls.
+
+This is intentional because it makes the workflow deterministic, reviewable, and testable. It allows the project to validate the hard parts before introducing external API variability:
+
+- prompt contracts
+- model-tier routing
+- structured JSON response shape
+- schema validation
+- fallback behavior
+- grounding checks
+- hallucination-risk warnings
+- Slack alert formatting
+- cost accounting
+
+In production, the fixture-based model-output layer can be replaced with live model API calls without rewriting the core pipeline.
+
+Current flow:
+
+```text
+model_tier
+    ↓
+load prompt file
+    ↓
+load curated JSON fixture
+    ↓
+validate schema
+    ↓
+run grounding guard
+    ↓
+generate Slack alert
+```
+
+Production flow:
+
+```text
+model_tier
+    ↓
+load prompt file
+    ↓
+select provider/model from configuration
+    ↓
+call live LLM API with strict structured output
+    ↓
+validate schema
+    ↓
+run grounding guard
+    ↓
+generate Slack alert
+```
+
+The main production change would be inside the AI client layer, not the full pipeline.
+
+Suggested production mapping:
+
+| Model tier | Case-study behavior | Production behavior |
+|---|---|---|
+| `cheap` | Load curated fixture for obvious cases | Call low-cost model for deterministic or low-ambiguity summaries |
+| `middle` | Load curated fixture for standard SEO diagnosis | Call balanced model for content decay, cannibalization, or moderate ambiguity |
+| `expensive` | Load curated fixture for high-impact or adversarial cases | Call stronger model for high-revenue, ambiguous, or strategic incidents |
+
+The repo includes a separate smoke command for this future live path:
+
+```bash
+make live-api-smoke
+```
+
+With empty API keys, this command skips safely instead of crashing. With credentials and explicit network permission, the live client can call a configured provider.
+
+Environment variables document the production configuration shape:
+
+```text
+LLM_PROVIDER
+CHEAP_MODEL_NAME
+MIDDLE_MODEL_NAME
+EXPENSIVE_MODEL_NAME
+OPENAI_API_KEY
+ANTHROPIC_API_KEY
+```
+
+The project keeps secrets out of prompts, source code, and Git. Real credentials belong in `.env` or a secret manager, while `.env.example` documents the expected configuration shape.
