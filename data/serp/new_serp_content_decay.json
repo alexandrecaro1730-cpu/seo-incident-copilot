@@ -1,0 +1,128 @@
+{
+  "query": "connected worker platform",
+  "captured_at": "2026-07-05T08:00:00Z",
+  "results": [
+    {
+      "position": 1,
+      "title": "Connected Worker Platform with Pricing and ROI Calculator",
+      "url": "https://trainops.example.com/connected-worker-platform",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "pricing",
+        "roi_calculator",
+        "integrations",
+        "faq",
+        "case_studies"
+      ]
+    },
+    {
+      "position": 2,
+      "title": "Connected Worker Platform for Global Manufacturers",
+      "url": "https://floorskill.example.com/connected-worker",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "use_cases",
+        "pricing",
+        "comparison_table",
+        "security",
+        "customer_stories"
+      ]
+    },
+    {
+      "position": 3,
+      "title": "Best Connected Worker Platforms Compared",
+      "url": "https://industrysoftware.example.com/best-connected-worker-platforms",
+      "result_type": "comparison_article",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "comparison_table",
+        "ratings",
+        "alternatives"
+      ]
+    },
+    {
+      "position": 4,
+      "title": "Connected Worker Software for Enterprise Operations",
+      "url": "https://buildwise.example.com/connected-worker-platform",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "integrations",
+        "security",
+        "faq",
+        "implementation"
+      ]
+    },
+    {
+      "position": 5,
+      "title": "Connected Worker Platform Buyer's Guide 2026",
+      "url": "https://operationsweekly.example.com/connected-worker-buyers-guide",
+      "result_type": "buyers_guide",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "buyers_guide",
+        "vendor_matrix",
+        "pricing"
+      ]
+    },
+    {
+      "position": 6,
+      "title": "What Is a Connected Worker Platform?",
+      "url": "https://factoryops.example.com/wiki/connected-worker",
+      "result_type": "definition_article",
+      "intent_label": "informational",
+      "features": [
+        "definition",
+        "faq"
+      ]
+    },
+    {
+      "position": 7,
+      "title": "Connected Worker Solutions for Factories",
+      "url": "https://shopfloorcloud.example.com",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "use_cases",
+        "security"
+      ]
+    },
+    {
+      "position": 8,
+      "title": "How Connected Workers Improve OEE",
+      "url": "https://opsacademy.example.com/oee-connected-worker",
+      "result_type": "informational_article",
+      "intent_label": "informational",
+      "features": [
+        "how_to",
+        "metrics"
+      ]
+    },
+    {
+      "position": 9,
+      "title": "Connected Worker Platform | Maydup",
+      "url": "https://maydup.example.com/connected-worker-platform",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "features",
+        "customer_logos"
+      ]
+    },
+    {
+      "position": 10,
+      "title": "Connected Worker Platform Alternatives",
+      "url": "https://trainops.example.com/alternatives",
+      "result_type": "comparison_landing_page",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "alternatives",
+        "comparison_table"
+      ]
+    }
+  ]
+}

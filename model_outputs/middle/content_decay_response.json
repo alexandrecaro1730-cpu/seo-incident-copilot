@@ -1,0 +1,30 @@
+{
+  "issue_type": "content_decay",
+  "confidence_score": 0.74,
+  "recommended_action": "Refresh the landing page with missing commercial modules such as pricing context, integrations, FAQ, case studies, and comparison coverage before treating this as a technical issue.",
+  "evidence": [
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The keyword dropped from position 3 to position 9."
+    },
+    {
+      "evidence_id": "SERP_002",
+      "claim": "The SERP remains mostly commercial, so the issue is not primarily an intent shift."
+    },
+    {
+      "evidence_id": "PAGE_002",
+      "claim": "The page has not been updated for 214 days and has fewer modules than winning competitor pages."
+    },
+    {
+      "evidence_id": "PLAYBOOK_CONTENT_001",
+      "claim": "The content decay playbook recommends refreshing missing pricing, FAQ, integration, and comparison modules."
+    }
+  ],
+  "next_steps": [
+    "Add missing commercial modules to the landing page.",
+    "Update examples, screenshots, integrations, and trust proof.",
+    "Add FAQPage or SoftwareApplication schema if validated by content.",
+    "Build internal links from related blog and glossary pages."
+  ],
+  "requires_human_review": true
+}

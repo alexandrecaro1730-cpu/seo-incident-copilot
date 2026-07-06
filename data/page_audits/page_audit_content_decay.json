@@ -1,0 +1,26 @@
+{
+  "url": "https://maydup.example.com/connected-worker-platform",
+  "fetched_at": "2026-07-05T08:05:00Z",
+  "status_code": 200,
+  "meta_robots": "index,follow",
+  "canonical": "https://maydup.example.com/connected-worker-platform",
+  "canonical_matches_url": true,
+  "blocked_by_robots_txt": false,
+  "title": "Connected Worker Platform | Maydup",
+  "h1": "Connected Worker Platform",
+  "word_count": 940,
+  "last_updated_days_ago": 214,
+  "internal_links_in": 13,
+  "schema_types": [
+    "SoftwareApplication"
+  ],
+  "modules": [
+    "hero",
+    "features",
+    "customer_logos",
+    "demo_cta"
+  ],
+  "known_recent_deployments": [
+    "none in last 90 days"
+  ]
+}

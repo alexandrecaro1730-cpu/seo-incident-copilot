@@ -1,0 +1,26 @@
+{
+  "issue_type": "technical_regression",
+  "confidence_score": 0.97,
+  "recommended_action": "Remove the accidental noindex directive, validate the CMS template, request reindexing, and add deployment-time indexability checks.",
+  "evidence": [
+    {
+      "evidence_id": "TECH_001",
+      "claim": "The page audit shows meta_robots contains noindex,follow."
+    },
+    {
+      "evidence_id": "PLAYBOOK_NOINDEX_001",
+      "claim": "The noindex playbook treats noindex on a revenue-critical page as an urgent technical regression."
+    },
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The keyword dropped from position 2 to position 12."
+    }
+  ],
+  "next_steps": [
+    "Remove noindex from the production template.",
+    "Validate indexability after deployment.",
+    "Request reindexing and monitor ranking recovery.",
+    "Add an automated noindex regression check to deployment QA."
+  ],
+  "requires_human_review": true
+}

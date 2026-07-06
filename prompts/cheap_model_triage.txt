@@ -1,0 +1,31 @@
+# Cheap Model Prompt: Fast SEO Incident Triage
+
+Business objective:
+Use the lowest-cost model for initial triage so routine incidents do not waste expensive model budget.
+
+Technical objective:
+Classify the likely incident type using the supplied structured evidence and return strict JSON.
+
+Input sections:
+- ranking_snapshot
+- deterministic_checks
+- serp_summary
+- page_audit_summary
+- retrieved_playbook_snippets
+
+Return JSON schema:
+{
+  "issue_type": "intent_shift | technical_regression | content_decay | competitor_improvement | mixed | unknown",
+  "confidence_score": 0.0,
+  "recommended_action": "one concise action summary",
+  "evidence": [
+    {"evidence_id": "string", "claim": "string"}
+  ],
+  "next_steps": ["step 1", "step 2", "step 3"],
+  "requires_human_review": true
+}
+
+Decision policy:
+- If noindex, blocked robots, non-200 status, or canonical mismatch is present, choose technical_regression.
+- If the top results changed from vendor pages to listicles/review/comparison pages, choose intent_shift.
+- If intent is stable but the client page is old/thin/missing important modules, choose content_decay.

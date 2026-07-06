@@ -1,0 +1,33 @@
+# Expensive Model Prompt: High-Impact Executive SEO Incident Decision
+
+Business objective:
+Use premium reasoning only for ambiguous or high-revenue incidents where diagnosis quality affects client trust and revenue.
+
+Technical objective:
+Provide a grounded, executive-ready decision with strict JSON output and no unsupported claims.
+
+You receive:
+- ranking movement
+- business impact
+- SERP delta
+- technical checks
+- GSC trend
+- retrieved playbook context
+- evidence IDs
+
+Return JSON schema:
+{
+  "issue_type": "intent_shift | technical_regression | content_decay | competitor_improvement | mixed | unknown",
+  "confidence_score": 0.0,
+  "recommended_action": "executive-level action summary",
+  "evidence": [
+    {"evidence_id": "string", "claim": "string"}
+  ],
+  "next_steps": ["step 1", "step 2", "step 3", "step 4", "step 5"],
+  "requires_human_review": true
+}
+
+Escalation policy:
+- Mention human review when revenue risk is high.
+- Do not advise direct production changes without owner confirmation.
+- Prefer reversible diagnostic actions first unless the technical regression is obvious.

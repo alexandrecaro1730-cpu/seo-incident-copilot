@@ -1,0 +1,30 @@
+{
+  "issue_type": "intent_shift",
+  "confidence_score": 0.86,
+  "recommended_action": "Create or refresh a comparison/listicle-style supporting asset, add comparison coverage to the landing page, and strengthen internal links back to the commercial page.",
+  "evidence": [
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The keyword dropped from position 2 to position 9 for a high-priority landing page."
+    },
+    {
+      "evidence_id": "SERP_001",
+      "claim": "The new SERP is dominated by listicles, review category pages, and comparison pages instead of vendor landing pages."
+    },
+    {
+      "evidence_id": "PAGE_001",
+      "claim": "The affected page has no dedicated comparison, alternatives, or buyer-guide module."
+    },
+    {
+      "evidence_id": "PLAYBOOK_INTENT_001",
+      "claim": "The intent-shift playbook recommends a comparison asset and internal links when Google favors listicle/comparison formats."
+    }
+  ],
+  "next_steps": [
+    "Create a best-tools or comparison asset targeting commercial-investigation intent.",
+    "Add a comparison or alternatives module to the affected landing page.",
+    "Add internal links from supporting informational pages to the commercial page.",
+    "Re-check ranking and CTR after the next crawl cycle."
+  ],
+  "requires_human_review": true
+}

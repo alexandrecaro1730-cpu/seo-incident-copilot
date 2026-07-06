@@ -1,0 +1,29 @@
+{
+  "url": "https://maydup.example.com/digital-work-instruction-software",
+  "fetched_at": "2026-07-05T08:05:00Z",
+  "status_code": 200,
+  "meta_robots": "noindex,follow",
+  "canonical": "https://maydup.example.com/digital-work-instruction-software",
+  "canonical_matches_url": true,
+  "blocked_by_robots_txt": false,
+  "title": "Digital Work Instruction Software | Maydup",
+  "h1": "Digital Work Instruction Software for Manufacturers",
+  "word_count": 1540,
+  "last_updated_days_ago": 12,
+  "internal_links_in": 31,
+  "schema_types": [
+    "SoftwareApplication",
+    "FAQPage"
+  ],
+  "modules": [
+    "hero",
+    "features",
+    "case_studies",
+    "demo_cta",
+    "faq"
+  ],
+  "known_recent_deployments": [
+    "CMS migration",
+    "staging-to-production template sync"
+  ]
+}

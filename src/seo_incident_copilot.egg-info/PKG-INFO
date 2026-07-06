@@ -1,0 +1,122 @@
+Metadata-Version: 2.4
+Name: seo-incident-copilot
+Version: 0.1.0
+Summary: Production-shaped SEO/GEO incident detection mini-pipeline for the YOYABA SEO AI Engineer case study.
+Author: Alexandre Caro
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.5; extra == "dev"
+
+# SEO Incident Copilot
+
+Production-shaped Python mini-project for the **(Senior) SEO AI Engineer** case study.
+
+The project simulates an automation that detects high-value SEO ranking drops, checks whether the cause is a technical regression, search-intent shift, or content decay, validates structured AI output, controls hallucination risk through evidence grounding, estimates model cost, and creates an actionable Slack alert.
+
+## Why this repo exists
+
+**Business objective:** reduce SEO incident diagnosis time before traffic loss becomes visible.
+
+**Technical objective:** show a robust AI-first workflow that is still deterministic where deterministic logic is safer, cheaper, and faster.
+
+The system uses manual prompt files and manually curated JSON model-output fixtures for three model tiers:
+
+- `cheap`: fast triage and obvious cases
+- `middle`: standard root-cause analysis
+- `expensive`: high-impact or ambiguous incident analysis
+
+This lets us test prompt contracts, JSON schemas, routing, fallback, Slack payloads, and grounding before connecting a real LLM API.
+
+## Demo scenarios
+
+| Scenario | Expected root cause | What it proves |
+|---|---|---|
+| `intent_shift` | Google now favors listicles/comparison pages | SERP intent comparison + RAG-grounded recommendation |
+| `technical_regression` | Accidental `noindex` tag | deterministic SEO check beats unnecessary LLM reasoning |
+| `content_decay` | Competitors improved page depth/modules | content decay and competitor-change reasoning |
+| `no_trigger` | Movement too small | system does not create noisy false alerts |
+| `timeout_fallback` | LLM timeout | controlled fallback incident instead of broken automation |
+
+## Setup
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+```
+
+## Run tests
+
+```bash
+python -m pytest
+```
+
+## Run a demo incident
+
+```bash
+python -m seo_incident_copilot.main --scenario intent_shift --dry-run-slack
+```
+
+Try the other scenarios:
+
+```bash
+python -m seo_incident_copilot.main --scenario technical_regression --dry-run-slack
+python -m seo_incident_copilot.main --scenario content_decay --dry-run-slack
+python -m seo_incident_copilot.main --scenario no_trigger --dry-run-slack
+python -m seo_incident_copilot.main --scenario timeout_fallback --dry-run-slack
+```
+
+Generated incident logs and Slack payload previews are written into `outputs/`.
+
+## How this maps to production
+
+This repo uses fixture JSON instead of live APIs so the case study is deterministic and testable. In production, the same interfaces can be connected to:
+
+- Google Search Console API
+- DataForSEO / rank tracker APIs
+- Screaming Frog / Sitebulb exports
+- server logs
+- CMS APIs
+- Slack webhooks
+- BigQuery / Snowflake / Databricks
+- MCP-exposed SEO tools
+
+## Architecture
+
+```text
+Ranking snapshot
+    ↓
+Data validation
+    ↓
+Rank-drop detection
+    ↓
+Evidence collection
+    ├─ SERP comparison
+    ├─ page audit checks
+    ├─ GSC trend fixture
+    └─ SEO playbook retrieval
+    ↓
+Cost-aware model routing
+    ↓
+Manual prompt + JSON fixture output
+    ↓
+Strict schema validation
+    ↓
+Grounding and hallucination guard
+    ↓
+Slack payload generation
+    ↓
+Incident JSONL log
+```
+
+## Design principles
+
+1. **Deterministic checks first.** Do not ask an LLM whether a page has `noindex` when Python can inspect the value.
+2. **AI where judgment matters.** Use LLMs for SERP intent interpretation, synthesis, prioritization, and communication.
+3. **Structured output only.** Every model tier must return the same schema.
+4. **Evidence required.** Recommendations must reference evidence IDs from input data or retrieved playbooks.
+5. **Cost-aware routing.** Expensive models are reserved for high-impact or ambiguous cases.
+6. **Human escalation by design.** The system recommends action; it does not silently change production SEO settings.

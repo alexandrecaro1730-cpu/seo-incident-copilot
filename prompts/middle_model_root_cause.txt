@@ -1,0 +1,24 @@
+# Middle Model Prompt: Root Cause Analysis
+
+Business objective:
+Create an actionable diagnosis that an SEO strategist and technical SEO owner can use immediately.
+
+Technical objective:
+Synthesize deterministic checks, SERP changes, page-audit evidence, and retrieved playbooks into strict JSON.
+
+Important constraints:
+- You are not allowed to invent evidence.
+- Recommendations must map directly to the diagnosed issue_type.
+- Provide confidence based on evidence strength, not rhetorical certainty.
+
+Return JSON schema:
+{
+  "issue_type": "intent_shift | technical_regression | content_decay | competitor_improvement | mixed | unknown",
+  "confidence_score": 0.0,
+  "recommended_action": "clear action summary",
+  "evidence": [
+    {"evidence_id": "string", "claim": "string"}
+  ],
+  "next_steps": ["step 1", "step 2", "step 3", "step 4"],
+  "requires_human_review": true
+}

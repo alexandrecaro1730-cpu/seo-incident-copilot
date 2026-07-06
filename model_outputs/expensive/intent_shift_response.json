@@ -1,0 +1,35 @@
+{
+  "issue_type": "intent_shift",
+  "confidence_score": 0.9,
+  "recommended_action": "Treat this as a high-impact intent-shift incident: protect the commercial landing page while creating a comparison-led asset that matches the new SERP format and internally routes bottom-funnel demand back to the product page.",
+  "evidence": [
+    {
+      "evidence_id": "RANK_001",
+      "claim": "A high-priority keyword dropped from position 2 to position 9 with estimated monthly revenue at risk above the high-impact threshold."
+    },
+    {
+      "evidence_id": "SERP_001",
+      "claim": "The top five results shifted toward listicles, reviews, and comparison formats."
+    },
+    {
+      "evidence_id": "PAGE_001",
+      "claim": "The landing page lacks comparison and alternatives modules that would satisfy commercial-investigation intent."
+    },
+    {
+      "evidence_id": "GSC_001",
+      "claim": "Impressions are stable or higher while CTR and average position declined, which is consistent with visibility loss rather than demand collapse."
+    },
+    {
+      "evidence_id": "PLAYBOOK_INTENT_001",
+      "claim": "The playbook recommends a support asset, comparison module, and stronger internal links for listicle-dominated SERPs."
+    }
+  ],
+  "next_steps": [
+    "Create a comparison/listicle asset targeting the shifted SERP format.",
+    "Add comparison, alternatives, and buyer-guide sections to the landing page.",
+    "Add internal links from the new asset and related educational pages to the commercial landing page.",
+    "Monitor ranking, CTR, and assisted conversions for 14 days after deployment.",
+    "Escalate to the SEO strategist and content lead because revenue risk is high."
+  ],
+  "requires_human_review": true
+}

@@ -1,0 +1,123 @@
+{
+  "query": "manufacturing training software",
+  "captured_at": "2026-07-05T08:00:00Z",
+  "results": [
+    {
+      "position": 1,
+      "title": "Best Manufacturing Training Software in 2026",
+      "url": "https://softwarechoice.example.com/best-manufacturing-training-software",
+      "result_type": "listicle",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "top_list",
+        "ratings",
+        "pricing_comparison"
+      ]
+    },
+    {
+      "position": 2,
+      "title": "Top Manufacturing LMS Platforms Compared",
+      "url": "https://g2-like.example.com/categories/manufacturing-lms",
+      "result_type": "review_category_page",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "reviews",
+        "ratings",
+        "alternatives"
+      ]
+    },
+    {
+      "position": 3,
+      "title": "10 Best Tools for Factory Worker Training",
+      "url": "https://operationsweekly.example.com/best-factory-worker-training-tools",
+      "result_type": "listicle",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "top_list",
+        "pros_cons",
+        "comparison_table"
+      ]
+    },
+    {
+      "position": 4,
+      "title": "Manufacturing Training Software Comparison Guide",
+      "url": "https://industrysoftware.example.com/compare-training-tools",
+      "result_type": "comparison_article",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "comparison_table",
+        "buyers_guide"
+      ]
+    },
+    {
+      "position": 5,
+      "title": "TrainOps vs Maydup vs FloorSkill",
+      "url": "https://trainops.example.com/compare/trainops-vs-maydup",
+      "result_type": "comparison_landing_page",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "competitor_comparison",
+        "pricing",
+        "faq"
+      ]
+    },
+    {
+      "position": 6,
+      "title": "Manufacturing Training Software for Enterprises",
+      "url": "https://trainops.example.com/manufacturing-training",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "use_cases",
+        "integrations"
+      ]
+    },
+    {
+      "position": 7,
+      "title": "Digital Manufacturing Training Platform | FloorSkill",
+      "url": "https://floorskill.example.com/platform",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "pricing",
+        "demo_cta",
+        "case_studies"
+      ]
+    },
+    {
+      "position": 8,
+      "title": "Manufacturing Training Software FAQ",
+      "url": "https://factoryops.example.com/wiki/training-software",
+      "result_type": "definition_article",
+      "intent_label": "informational",
+      "features": [
+        "definition",
+        "faq"
+      ]
+    },
+    {
+      "position": 9,
+      "title": "Manufacturing Training Software | Maydup",
+      "url": "https://maydup.example.com/manufacturing-training-software",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "features",
+        "customer_logos"
+      ]
+    },
+    {
+      "position": 10,
+      "title": "How to Build Manufacturing Training Programs",
+      "url": "https://opsacademy.example.com/guides/manufacturing-training",
+      "result_type": "informational_article",
+      "intent_label": "informational",
+      "features": [
+        "how_to",
+        "templates"
+      ]
+    }
+  ]
+}
