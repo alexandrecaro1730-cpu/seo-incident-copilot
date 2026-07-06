@@ -1,0 +1,26 @@
+{
+  "issue_type": "technical_regression",
+  "confidence_score": 0.96,
+  "recommended_action": "Fix the canonical URL so it points back to the primary landing page, validate the CMS template, and rerun indexability checks before requesting reindexing.",
+  "evidence": [
+    {
+      "evidence_id": "TECH_001",
+      "claim": "The page audit reports a canonical mismatch on the affected landing page."
+    },
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The keyword dropped from position 2 to position 11 with high estimated monthly risk."
+    },
+    {
+      "evidence_id": "PLAYBOOK_NOINDEX_001",
+      "claim": "The technical regression playbook supports urgent validation of indexability and canonical settings."
+    }
+  ],
+  "next_steps": [
+    "Update the canonical field in the CMS template.",
+    "Validate the rendered canonical on production and staging.",
+    "Rerun crawl checks for the affected template family.",
+    "Request reindexing after the canonical is fixed."
+  ],
+  "requires_human_review": true
+}

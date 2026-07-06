@@ -1,0 +1,20 @@
+{
+  "issue_type": "content_decay",
+  "confidence_score": 0.88,
+  "recommended_action": "Add a pricing comparison table because Competitor A added transparent pricing last week and is now capturing bottom-funnel demand.",
+  "evidence": [
+    {
+      "evidence_id": "SERP_001",
+      "claim": "Competitor A added transparent pricing last week."
+    },
+    {
+      "evidence_id": "PAGE_001",
+      "claim": "The landing page lacks comparison and alternatives modules."
+    }
+  ],
+  "next_steps": [
+    "Copy the competitor pricing angle into a new comparison section.",
+    "Ask the SEO strategist to verify whether pricing claims can be published."
+  ],
+  "requires_human_review": true
+}

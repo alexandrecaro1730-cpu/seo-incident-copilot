@@ -53,8 +53,14 @@ class ManualFixtureLLMClient:
 def _fixture_filename_for_scenario(scenario: str) -> str:
     """Map scenario names to output fixture files."""
 
-    if scenario == "technical_regression":
-        return "technical_regression_response.json"
-    if scenario == "content_decay":
-        return "content_decay_response.json"
-    return "intent_shift_response.json"
+    scenario_to_file = {
+        "technical_regression": "technical_regression_response.json",
+        "canonical_regression": "canonical_regression_response.json",
+        "content_decay": "content_decay_response.json",
+        "keyword_cannibalization": "keyword_cannibalization_response.json",
+        "hallucinated_competitor_claim": "hallucinated_competitor_claim_response.json",
+        "action_mismatch": "action_mismatch_response.json",
+        "invalid_schema_output": "invalid_schema_output_response.json",
+        "overconfident_weak_evidence": "overconfident_weak_evidence_response.json",
+    }
+    return scenario_to_file.get(scenario, "intent_shift_response.json")

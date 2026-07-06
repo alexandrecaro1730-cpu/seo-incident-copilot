@@ -1,0 +1,121 @@
+{
+  "query": "manufacturing training software",
+  "captured_at": "2026-07-05T08:00:00Z",
+  "results": [
+    {
+      "position": 1,
+      "title": "Factory Training Software for Manufacturers | TrainOps",
+      "url": "https://trainops.example.com/manufacturing-training",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "use_cases",
+        "integrations"
+      ]
+    },
+    {
+      "position": 2,
+      "title": "Manufacturing Training Program Guide | Maydup Blog",
+      "url": "https://maydup.example.com/blog/manufacturing-training-guide",
+      "result_type": "informational_article",
+      "intent_label": "informational",
+      "features": [
+        "how_to",
+        "templates",
+        "faq"
+      ]
+    },
+    {
+      "position": 3,
+      "title": "Digital Manufacturing Training Platform | FloorSkill",
+      "url": "https://floorskill.example.com/platform",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "pricing",
+        "demo_cta",
+        "case_studies"
+      ]
+    },
+    {
+      "position": 4,
+      "title": "Training Management Software for Production Teams",
+      "url": "https://worklearn.example.com/manufacturing",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "faq",
+        "integrations"
+      ]
+    },
+    {
+      "position": 5,
+      "title": "Manufacturing Training Software Comparison",
+      "url": "https://industrysoftware.example.com/compare-training-tools",
+      "result_type": "comparison_article",
+      "intent_label": "commercial_investigation",
+      "features": [
+        "comparison_table",
+        "pros_cons"
+      ]
+    },
+    {
+      "position": 6,
+      "title": "Employee Training in Manufacturing: Complete Guide",
+      "url": "https://opsacademy.example.com/guides/manufacturing-training",
+      "result_type": "informational_article",
+      "intent_label": "informational",
+      "features": [
+        "how_to",
+        "templates"
+      ]
+    },
+    {
+      "position": 7,
+      "title": "Connected Worker Training Platform | Buildwise",
+      "url": "https://buildwise.example.com/training",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "modules"
+      ]
+    },
+    {
+      "position": 8,
+      "title": "Manufacturing Skills Matrix Software",
+      "url": "https://skillmatrix.example.com",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "templates",
+        "demo_cta"
+      ]
+    },
+    {
+      "position": 9,
+      "title": "What is Manufacturing Training Software?",
+      "url": "https://factoryops.example.com/wiki/training-software",
+      "result_type": "definition_article",
+      "intent_label": "informational",
+      "features": [
+        "definition",
+        "faq"
+      ]
+    },
+    {
+      "position": 10,
+      "title": "Manufacturing Training Software | Maydup",
+      "url": "https://maydup.example.com/manufacturing-training-software",
+      "result_type": "vendor_landing_page",
+      "intent_label": "commercial",
+      "features": [
+        "demo_cta",
+        "features",
+        "customer_logos"
+      ]
+    }
+  ]
+}

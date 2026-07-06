@@ -1,0 +1,8 @@
+{
+  "issue_type": "intent_shift",
+  "confidence_score": 1.2,
+  "recommended_action": "Probably fix SEO.",
+  "evidence": [],
+  "next_steps": "Create a listicle and check technical SEO.",
+  "requires_human_review": "yes"
+}

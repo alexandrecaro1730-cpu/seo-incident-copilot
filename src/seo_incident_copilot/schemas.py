@@ -17,7 +17,10 @@ ALLOWED_ISSUE_TYPES = {
     "intent_shift",
     "technical_regression",
     "content_decay",
+    "keyword_cannibalization",
+    "demand_shift",
     "competitor_improvement",
+    "mixed_issue",
     "mixed",
     "unknown",
 }

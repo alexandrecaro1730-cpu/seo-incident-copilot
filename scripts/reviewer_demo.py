@@ -8,6 +8,10 @@ Business Objective:
     metrics such as model-tier usage, average cost, grounding quality, and
     hallucination-risk signals.
 
+    It also prints an AI engineering maturity timeline so the reviewer can see
+    where RAG, agent skills, structured outputs, model routing, grounding,
+    observability, MCP readiness, and future live integrations fit into the system.
+
 Technical Objective:
     Run pytest, Ruff, and every demo scenario from one Python entry point. Parse the
     JSON output from each scenario, calculate aggregate metrics, and write both a
@@ -44,6 +48,79 @@ SCENARIOS = [
     "action_mismatch",
     "invalid_schema_output",
     "overconfident_weak_evidence",
+]
+
+AI_ENGINEERING_TIMELINE = [
+    {
+        "stage": "1. Quality gates",
+        "concept": "Testability / CI readiness",
+        "current_status": "implemented",
+        "current_implementation": "pytest + Ruff run before scenarios",
+        "future_direction": "Move the same gates into GitHub Actions.",
+    },
+    {
+        "stage": "2. Evidence collection",
+        "concept": "Data contracts / tool boundaries",
+        "current_status": "implemented",
+        "current_implementation": "Ranking, SERP, GSC, page-audit, and playbook fixtures",
+        "future_direction": "Connect the interfaces to GSC, DataForSEO, crawler exports, and logs.",
+    },
+    {
+        "stage": "3. Deterministic SEO skills",
+        "concept": "Agent skills / controlled tools",
+        "current_status": "implemented",
+        "current_implementation": "Rank-drop, noindex, canonical, demand, and cannibalization checks",
+        "future_direction": "Expose the same skills through an internal tool registry with permissions.",
+    },
+    {
+        "stage": "4. Playbook retrieval",
+        "concept": "RAG / retrieval grounding",
+        "current_status": "implemented-lite",
+        "current_implementation": "Local SEO playbook retrieval from data/knowledge_base",
+        "future_direction": "Upgrade to embedding search over client playbooks and incident memory.",
+    },
+    {
+        "stage": "5. Model selection",
+        "concept": "Cost-aware model routing",
+        "current_status": "implemented",
+        "current_implementation": "cheap / middle / expensive tier routing by evidence and impact",
+        "future_direction": "Track real token cost, latency, and confidence by provider/model.",
+    },
+    {
+        "stage": "6. AI analysis",
+        "concept": "Structured output",
+        "current_status": "implemented-as-fixtures",
+        "current_implementation": "Manual prompts + schema-validated JSON model-output fixtures",
+        "future_direction": "Replace fixtures with strict JSON-schema outputs from live LLM APIs.",
+    },
+    {
+        "stage": "7. Safety layer",
+        "concept": "Grounding / hallucination guard",
+        "current_status": "implemented",
+        "current_implementation": "Unsupported-claim, action-mismatch, invalid-schema, overconfidence checks",
+        "future_direction": "Add claim extraction, contradiction checks, and retrieval citations.",
+    },
+    {
+        "stage": "8. Delivery layer",
+        "concept": "Slack alerting / human-in-the-loop",
+        "current_status": "implemented-dry-run",
+        "current_implementation": "Slack-compatible payload preview + human-review flag",
+        "future_direction": "Connect a Slack webhook/app and add owner routing / escalation rules.",
+    },
+    {
+        "stage": "9. Observability",
+        "concept": "AI workflow metrics",
+        "current_status": "implemented",
+        "current_implementation": "Cost, model share, grounding, hallucination-risk, warning-code metrics",
+        "future_direction": "Persist run history to warehouse dashboards and alert on drift/failure spikes.",
+    },
+    {
+        "stage": "10. MCP readiness",
+        "concept": "MCP / tool-server architecture",
+        "current_status": "design-ready",
+        "current_implementation": "Python skills are cleanly separated but not exposed as an MCP server",
+        "future_direction": "Expose approved SEO skills as MCP tools with auth, logs, and rate limits.",
+    },
 ]
 
 
@@ -343,6 +420,21 @@ def calculate_reviewer_metrics(summaries: list[dict[str, Any]]) -> dict[str, Any
     }
 
 
+def ai_maturity_timeline() -> list[dict[str, str]]:
+    """
+    Business explanation:
+        Return the implementation timeline that explains where mature AI-engineering
+        concepts sit in the workflow without overpromising that every future-facing
+        capability is already fully implemented.
+
+    Technical explanation:
+        Keeping the map as data makes it easy to print in the terminal, serialize
+        to JSON, test, and reuse in the Markdown reviewer report.
+    """
+
+    return AI_ENGINEERING_TIMELINE
+
+
 def format_percent(value: Any) -> str:
     """Format a decimal score as a reviewer-friendly percentage."""
 
@@ -390,6 +482,7 @@ def write_reports(
     """Write reviewer-friendly Markdown and JSON reports."""
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    maturity_timeline = ai_maturity_timeline()
 
     report_json = {
         "quality_results": [
@@ -402,6 +495,7 @@ def write_reports(
             }
             for result in quality_results
         ],
+        "ai_engineering_timeline": maturity_timeline,
         "aggregate_metrics": aggregate_metrics,
         "scenario_summaries": scenario_summaries,
         "raw_scenarios": raw_scenarios,
@@ -428,6 +522,26 @@ def write_reports(
     lines.extend(
         [
             "",
+            "## AI Engineering Maturity Timeline",
+            "",
+            "| Pipeline Stage | Concept | Current Status | Current Implementation | Future Direction |",
+            "|---|---|---|---|---|",
+        ]
+    )
+
+    for item in maturity_timeline:
+        lines.append(
+            "| "
+            f"{item['stage']} | "
+            f"{item['concept']} | "
+            f"{item['current_status']} | "
+            f"{item['current_implementation']} | "
+            f"{item['future_direction']} |"
+        )
+
+    lines.extend(
+        [
+            "",
             "## Aggregate Metrics",
             "",
             f"- Incident detection rate: {format_percent(aggregate_metrics['incident_detection_rate'])}",
@@ -436,7 +550,10 @@ def write_reports(
                 "- Deterministic resolution rate: "
                 f"{format_percent(aggregate_metrics['deterministic_resolution_rate'])}"
             ),
-            f"- Average cost per incident: {format_cost(aggregate_metrics['average_cost_per_incident_eur'])}",
+            (
+                "- Average cost per incident: "
+                f"{format_cost(aggregate_metrics['average_cost_per_incident_eur'])}"
+            ),
             f"- Total estimated demo cost: {format_cost(aggregate_metrics['total_estimated_cost_eur'])}",
             f"- Model usage share: {format_share_dict(aggregate_metrics['model_usage_share'])}",
             f"- Average confidence: {format_percent(aggregate_metrics['average_confidence_score'])}",
@@ -483,8 +600,10 @@ def write_reports(
             "",
             (
                 "The system demonstrates deterministic SEO checks first, cost-aware model routing, "
-                "structured AI output, grounding validation, hallucination-risk examples, "
-                "controlled timeout fallback, and Slack-ready incident communication."
+                "RAG-style playbook grounding, structured AI output, hallucination-risk examples, "
+                "controlled timeout fallback, Slack-ready incident communication, and a clear path "
+                "toward MCP/live API productionization without claiming those future layers are already "
+                "fully implemented."
             ),
             "",
             "## Generated Files",
@@ -510,13 +629,24 @@ def print_terminal_summary(
     print("\nSEO Incident Copilot — Reviewer Demo")
     print("=" * 80)
 
-    print("\nQuality gates:")
+    print("\n1) Quality gates")
     for result in quality_results:
         status = "PASS" if result.passed else "FAIL"
         summary = quality_summary(result)
         print(f"  {status:<4} {result.name} — {summary}")
 
-    print("\nScenario outcomes:")
+    print("\n2) AI engineering maturity timeline")
+    for item in ai_maturity_timeline():
+        print(
+            "  "
+            f"{item['stage']:<27} "
+            f"{item['concept']:<34} "
+            f"status={item['current_status']}"
+        )
+        print(f"      now:  {item['current_implementation']}")
+        print(f"      next: {item['future_direction']}")
+
+    print("\n3) Scenario outcomes")
     for summary in scenario_summaries:
         print(
             "  "
@@ -528,7 +658,7 @@ def print_terminal_summary(
             f"cost={format_cost(summary.get('estimated_cost_eur'))}"
         )
 
-    print("\nAggregate metrics:")
+    print("\n4) Aggregate operating metrics")
     print(
         "  Incident detection rate:          "
         f"{format_percent(aggregate_metrics['incident_detection_rate'])}"
@@ -583,11 +713,18 @@ def print_terminal_summary(
         f"{format_count_dict(aggregate_metrics['warning_code_counts'])}"
     )
 
-    print("\nGenerated reviewer artifacts:")
+    print("\n5) Generated reviewer artifacts")
     print(f"  {OUTPUT_DIR / 'reviewer_summary.md'}")
     print(f"  {OUTPUT_DIR / 'reviewer_summary.json'}")
     print(f"  {PROJECT_ROOT / 'outputs' / 'slack_payload_preview.json'}")
     print(f"  {PROJECT_ROOT / 'outputs' / 'incidents.jsonl'}")
+
+    print("\nNote:")
+    print(
+        "  MCP and live APIs are marked as design-ready/extension points, not claimed as "
+        "fully implemented. The implemented core is the SEO evidence pipeline, "
+        "tool-like skills, routing, structured outputs, grounding, and observability."
+    )
 
 
 def main() -> int:

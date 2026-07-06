@@ -23,7 +23,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--scenario",
         required=True,
-        choices=["intent_shift", "technical_regression", "content_decay", "no_trigger", "timeout_fallback"],
+        choices=[
+            "intent_shift",
+            "technical_regression",
+            "content_decay",
+            "no_trigger",
+            "timeout_fallback",
+            "canonical_regression",
+            "keyword_cannibalization",
+            "demand_drop_not_seo_issue",
+            "hallucinated_competitor_claim",
+            "action_mismatch",
+            "invalid_schema_output",
+            "overconfident_weak_evidence",
+        ],
         help="Demo scenario to execute.",
     )
     parser.add_argument(

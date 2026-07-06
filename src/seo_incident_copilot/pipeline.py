@@ -21,7 +21,9 @@ from seo_incident_copilot.connectors.page_audit_source import load_gsc_metrics, 
 from seo_incident_copilot.connectors.ranking_source import load_ranking_snapshot
 from seo_incident_copilot.connectors.serp_source import load_serp
 from seo_incident_copilot.connectors.slack_client import build_slack_payload, send_or_write_slack_payload
+from seo_incident_copilot.detectors.cannibalization import detect_keyword_cannibalization
 from seo_incident_copilot.detectors.content_decay import detect_content_decay
+from seo_incident_copilot.detectors.demand_shift import detect_demand_shift
 from seo_incident_copilot.detectors.intent_shift import compare_serp_intent
 from seo_incident_copilot.detectors.rank_drop import detect_rank_drop
 from seo_incident_copilot.detectors.technical_regression import detect_technical_regression
@@ -38,8 +40,22 @@ def run_pipeline(config: AppConfig, scenario: str, dry_run_slack: bool = True) -
 
     # Business explanation:
     # Not every movement deserves an alert. Avoiding false positives preserves team
-    # trust in the automation.
+    # trust in the automation. However, if ranking is stable while impressions drop,
+    # we still surface a no-SEO-incident demand signal for context.
     if not rank_drop["triggered"]:
+        gsc_metrics = load_gsc_metrics(config.data_dir, snapshot["gsc_file"])
+        demand = detect_demand_shift(gsc_metrics)
+        if demand["likely_demand_shift"]:
+            return {
+                "status": "no_seo_incident",
+                "reason": (
+                    "Ranking movement did not meet the SEO incident threshold, "
+                    "but GSC-style demand signals declined while average position stayed stable."
+                ),
+                "snapshot": snapshot,
+                "rank_drop": rank_drop,
+                "deterministic_checks": {"demand": demand},
+            }
         return {
             "status": "no_incident",
             "reason": "Rank movement did not meet trigger threshold.",
@@ -55,18 +71,33 @@ def run_pipeline(config: AppConfig, scenario: str, dry_run_slack: bool = True) -
     technical = detect_technical_regression(page_audit)
     intent = compare_serp_intent(old_serp, new_serp)
     content = detect_content_decay(page_audit, new_serp)
+    cannibalization = detect_keyword_cannibalization(snapshot, old_serp, new_serp)
+    demand = detect_demand_shift(gsc_metrics)
 
     retriever = KnowledgeBaseRetriever(config.data_dir / "knowledge_base")
-    retrieval_query = _build_retrieval_query(technical, intent, content)
-    playbooks = retriever.retrieve(retrieval_query, top_k=3)
+    retrieval_query = _build_retrieval_query(technical, intent, content, cannibalization, demand)
+    playbooks = retriever.retrieve(retrieval_query, top_k=4)
 
-    evidence_catalog = _build_evidence_catalog(snapshot, rank_drop, technical, intent, content, page_audit, gsc_metrics, playbooks)
+    evidence_catalog = _build_evidence_catalog(
+        snapshot,
+        rank_drop,
+        technical,
+        intent,
+        content,
+        cannibalization,
+        demand,
+        page_audit,
+        gsc_metrics,
+        playbooks,
+    )
     evidence_bundle = {
         "ranking_snapshot": snapshot,
         "rank_drop": rank_drop,
         "technical_checks": technical,
         "serp_intent_comparison": intent,
         "content_decay_checks": content,
+        "cannibalization_checks": cannibalization,
+        "demand_shift_checks": demand,
         "page_audit_summary": page_audit,
         "gsc_metrics": gsc_metrics,
         "retrieved_playbooks": playbooks,
@@ -78,6 +109,7 @@ def run_pipeline(config: AppConfig, scenario: str, dry_run_slack: bool = True) -
         technical=technical,
         intent=intent,
         content=content,
+        cannibalization=cannibalization,
         high_revenue_risk_eur=config.high_revenue_risk_eur,
     )
 
@@ -102,6 +134,8 @@ def run_pipeline(config: AppConfig, scenario: str, dry_run_slack: bool = True) -
             "technical": technical,
             "intent": intent,
             "content": content,
+            "cannibalization": cannibalization,
+            "demand": demand,
         },
         "analysis": analysis,
         "cost": cost,
@@ -114,7 +148,13 @@ def run_pipeline(config: AppConfig, scenario: str, dry_run_slack: bool = True) -
     return incident
 
 
-def _build_retrieval_query(technical: dict[str, Any], intent: dict[str, Any], content: dict[str, Any]) -> str:
+def _build_retrieval_query(
+    technical: dict[str, Any],
+    intent: dict[str, Any],
+    content: dict[str, Any],
+    cannibalization: dict[str, Any],
+    demand: dict[str, Any],
+) -> str:
     """Create a compact query for the knowledge-base retriever."""
 
     terms = []
@@ -124,6 +164,10 @@ def _build_retrieval_query(technical: dict[str, Any], intent: dict[str, Any], co
         terms.append("intent shift listicle comparison review page")
     if content["likely_content_decay"]:
         terms.append("content decay pricing integrations faq comparison modules")
+    if cannibalization["likely_cannibalization"]:
+        terms.append("keyword cannibalization wrong ranking url internal links canonical")
+    if demand["likely_demand_shift"]:
+        terms.append("demand shift seasonality stable ranking impressions decline")
     return " ".join(terms) or "seo incident"
 
 
@@ -133,6 +177,8 @@ def _build_evidence_catalog(
     technical: dict[str, Any],
     intent: dict[str, Any],
     content: dict[str, Any],
+    cannibalization: dict[str, Any],
+    demand: dict[str, Any],
     page_audit: dict[str, Any],
     gsc_metrics: dict[str, Any],
     playbooks: list[dict[str, Any]],
@@ -141,31 +187,78 @@ def _build_evidence_catalog(
 
     Business explanation:
     Evidence IDs are the backbone of hallucination control. If the AI references
-    an ID that does not exist, the grounding guard can block or downgrade trust.
+    an ID that does not exist, or makes a claim not supported by the evidence text,
+    the grounding guard can block or downgrade trust.
     """
 
     catalog = {
-        "RANK_001": f"Keyword dropped from position {rank_drop['old_position']} to {rank_drop['new_position']}.",
-        "SERP_001": f"Intent-shift score is {intent['intent_shift_score']} with top-result composition changing.",
-        "SERP_002": f"New SERP vendor ratio is {intent['new_summary']['vendor_ratio']} and investigation ratio is {intent['new_summary']['investigation_ratio']}.",
-        "PAGE_001": f"Page modules are {page_audit.get('modules', [])}.",
-        "PAGE_002": f"Page age is {page_audit.get('last_updated_days_ago')} days, word count is {page_audit.get('word_count')}, and internal links in are {page_audit.get('internal_links_in')}.",
-        "GSC_001": f"GSC metrics show clicks {gsc_metrics.get('clicks_28d_before')} to {gsc_metrics.get('clicks_28d_after')} and impressions {gsc_metrics.get('impressions_28d_before')} to {gsc_metrics.get('impressions_28d_after')}.",
+        "RANK_001": (
+            f"Keyword {snapshot.get('keyword')} dropped from position "
+            f"{rank_drop['old_position']} to {rank_drop['new_position']} with "
+            f"{snapshot.get('estimated_monthly_revenue_at_risk_eur')} EUR estimated monthly risk."
+        ),
+        "SERP_001": (
+            f"Old SERP vendor ratio was {intent['old_summary']['vendor_ratio']} and new SERP vendor "
+            f"ratio is {intent['new_summary']['vendor_ratio']}; old investigation ratio was "
+            f"{intent['old_summary']['investigation_ratio']} and new investigation ratio is "
+            f"{intent['new_summary']['investigation_ratio']}; intent-shift score is "
+            f"{intent['intent_shift_score']}."
+        ),
+        "SERP_002": (
+            f"New SERP result-type counts are {intent['new_summary']['type_counts']} and "
+            f"intent counts are {intent['new_summary']['intent_counts']}."
+        ),
+        "PAGE_001": (
+            f"Page modules are {page_audit.get('modules', [])}; missing modules are "
+            f"{content.get('missing_modules', [])}."
+        ),
+        "PAGE_002": (
+            f"Page age is {page_audit.get('last_updated_days_ago')} days, word count is "
+            f"{page_audit.get('word_count')}, and internal links in are "
+            f"{page_audit.get('internal_links_in')}."
+        ),
+        "GSC_001": (
+            f"GSC metrics show clicks {gsc_metrics.get('clicks_28d_before')} to "
+            f"{gsc_metrics.get('clicks_28d_after')}, impressions "
+            f"{gsc_metrics.get('impressions_28d_before')} to "
+            f"{gsc_metrics.get('impressions_28d_after')}, CTR "
+            f"{gsc_metrics.get('ctr_before')} to {gsc_metrics.get('ctr_after')}, and average "
+            f"position {gsc_metrics.get('average_position_before')} to "
+            f"{gsc_metrics.get('average_position_after')}."
+        ),
     }
 
     if technical["has_technical_regression"]:
         catalog["TECH_001"] = "; ".join(issue["message"] for issue in technical["issues"])
 
+    if cannibalization["likely_cannibalization"]:
+        catalog["CANNIBAL_001"] = (
+            f"Primary URL {cannibalization['primary_url']} ranked before, but ranking URL after "
+            f"is {cannibalization['ranking_url_after']}; competing URL is "
+            f"{cannibalization['competing_url']}."
+        )
+
+    if demand["likely_demand_shift"]:
+        catalog["DEMAND_001"] = (
+            f"Impressions changed by {demand['impression_change_pct']} while average position "
+            f"changed by {demand['position_delta']}; ranking_stable={demand['ranking_stable']}."
+        )
+
     for playbook in playbooks:
         doc_id = str(playbook["doc_id"])
+        text = str(playbook.get("text", ""))[:400]
         if "intent" in doc_id:
-            catalog["PLAYBOOK_INTENT_001"] = "Intent-shift playbook retrieved."
+            catalog["PLAYBOOK_INTENT_001"] = f"Intent-shift playbook retrieved: {text}"
         elif "noindex" in doc_id:
-            catalog["PLAYBOOK_NOINDEX_001"] = "Noindex regression playbook retrieved."
+            catalog["PLAYBOOK_NOINDEX_001"] = f"Noindex regression playbook retrieved: {text}"
         elif "content" in doc_id:
-            catalog["PLAYBOOK_CONTENT_001"] = "Content decay playbook retrieved."
+            catalog["PLAYBOOK_CONTENT_001"] = f"Content decay playbook retrieved: {text}"
+        elif "cannibal" in doc_id:
+            catalog["PLAYBOOK_CANNIBAL_001"] = f"Cannibalization playbook retrieved: {text}"
+        elif "demand" in doc_id:
+            catalog["PLAYBOOK_DEMAND_001"] = f"Demand-shift playbook retrieved: {text}"
         elif "security" in doc_id:
-            catalog["PLAYBOOK_SECURITY_001"] = "SEO AI security playbook retrieved."
+            catalog["PLAYBOOK_SECURITY_001"] = f"SEO AI security playbook retrieved: {text}"
 
     # Ensure common playbook evidence IDs exist when matching detectors fired.
     if intent["likely_intent_shift"]:
@@ -173,6 +266,10 @@ def _build_evidence_catalog(
     if content["likely_content_decay"]:
         catalog.setdefault("PLAYBOOK_CONTENT_001", "Content decay playbook retrieved.")
     if technical["has_technical_regression"]:
-        catalog.setdefault("PLAYBOOK_NOINDEX_001", "Noindex regression playbook retrieved.")
+        catalog.setdefault("PLAYBOOK_NOINDEX_001", "Noindex or technical regression playbook retrieved.")
+    if cannibalization["likely_cannibalization"]:
+        catalog.setdefault("PLAYBOOK_CANNIBAL_001", "Keyword cannibalization playbook retrieved.")
+    if demand["likely_demand_shift"]:
+        catalog.setdefault("PLAYBOOK_DEMAND_001", "Demand-shift playbook retrieved.")
 
     return catalog

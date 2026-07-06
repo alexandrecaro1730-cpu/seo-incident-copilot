@@ -1,0 +1,20 @@
+{
+  "issue_type": "intent_shift",
+  "confidence_score": 0.97,
+  "recommended_action": "Immediately rebuild the landing page into a full comparison hub because the SERP has permanently changed.",
+  "evidence": [
+    {
+      "evidence_id": "SERP_FAKE_999",
+      "claim": "The SERP permanently changed and will not recover."
+    },
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The keyword dropped from position 2 to position 9."
+    }
+  ],
+  "next_steps": [
+    "Pause other SEO work and rebuild the page as a comparison hub.",
+    "Review unsupported assumptions before production changes."
+  ],
+  "requires_human_review": true
+}

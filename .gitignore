@@ -18,3 +18,8 @@ outputs/
 
 # Mac files
 .DS_Store
+
+# Coverage artifacts
+.coverage
+.coverage.*
+htmlcov/

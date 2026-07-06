@@ -1,0 +1,20 @@
+{
+  "issue_type": "intent_shift",
+  "confidence_score": 0.91,
+  "recommended_action": "Remove the accidental noindex tag and request reindexing immediately.",
+  "evidence": [
+    {
+      "evidence_id": "SERP_001",
+      "claim": "The SERP shifted from vendor pages toward comparison and listicle formats."
+    },
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The keyword dropped from position 2 to position 9."
+    }
+  ],
+  "next_steps": [
+    "Remove noindex from the production template.",
+    "Request reindexing in Google Search Console."
+  ],
+  "requires_human_review": true
+}

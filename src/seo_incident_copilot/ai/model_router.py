@@ -18,10 +18,12 @@ def choose_model_tier(
     intent: dict[str, Any],
     content: dict[str, Any],
     high_revenue_risk_eur: int,
+    cannibalization: dict[str, Any] | None = None,
 ) -> str:
     """Choose cheap, middle, or expensive model tier for analysis."""
 
     revenue_risk = int(snapshot.get("estimated_monthly_revenue_at_risk_eur", 0))
+    cannibalization = cannibalization or {}
 
     # Technical explanation:
     # An obvious noindex/canonical/status issue does not need premium reasoning.
@@ -29,6 +31,9 @@ def choose_model_tier(
     # Spend money where judgment is needed, not where deterministic checks are clear.
     if technical["has_technical_regression"]:
         return "cheap"
+
+    if cannibalization.get("likely_cannibalization"):
+        return "middle"
 
     ambiguous = intent["likely_intent_shift"] and content["likely_content_decay"]
     if revenue_risk >= high_revenue_risk_eur and (ambiguous or intent["likely_intent_shift"]):

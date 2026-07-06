@@ -1,0 +1,26 @@
+{
+  "issue_type": "keyword_cannibalization",
+  "confidence_score": 0.82,
+  "recommended_action": "Treat this as keyword cannibalization: restore the commercial landing page as the primary ranking URL, clarify the blog post intent, and strengthen internal links toward the product page.",
+  "evidence": [
+    {
+      "evidence_id": "CANNIBAL_001",
+      "claim": "The ranking URL changed from the primary landing page to the blog guide for the same keyword."
+    },
+    {
+      "evidence_id": "RANK_001",
+      "claim": "The primary landing page lost visibility for the target keyword."
+    },
+    {
+      "evidence_id": "PLAYBOOK_CANNIBAL_001",
+      "claim": "The cannibalization playbook recommends clarifying the primary target page and internal linking strategy."
+    }
+  ],
+  "next_steps": [
+    "Map the keyword to the commercial landing page as the canonical target.",
+    "Reduce exact-match commercial optimization on the blog guide.",
+    "Add internal links from the blog guide to the product landing page.",
+    "Monitor which URL ranks over the next two crawls and ranking refreshes."
+  ],
+  "requires_human_review": true
+}
